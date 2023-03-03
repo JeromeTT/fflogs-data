@@ -23,7 +23,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      - name: execute py script # run main.py
+      - name: Execute py script # run main.py
+        env:
+          ENCODED_SECRET: ${{ secrets.ENCODED_SECRET }}
         run: python top.py
           
       - name: commit files
