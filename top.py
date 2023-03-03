@@ -1,6 +1,7 @@
 import csv
 import requests
 import os
+import pandas as pd
 ENCODED_SECRET = os.environ["ENCODED_SECRET"]
 GUILD_ID = 103532
 NAME = "Minty Evergreen"
@@ -171,3 +172,8 @@ if __name__ == "__main__":
                     finalList = [newDate,pullNumber,pullDuration,bossPercentage,fightPercentage,lastPhase,lastPhaseIntermission,glitch,defamation]
                     print(finalList)
                     output_writer.writerow(finalList)
+    # Use pandas to sort and clean data, then reexport the csv.
+    df = pd.read_csv("output.csv")
+    df.sort_values(by="LogStartTime")
+    df.drop_duplicates(inplace=True)
+    df.to_csv("output.csv", encoding='utf-8', index=False)
