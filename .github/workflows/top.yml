@@ -3,6 +3,7 @@ name: Update data for The Omega Protocol (Ultimate)
 on:
   schedule:
     - cron: '0 0 * * 1' # At 00:00 on Monday
+  workflow-dispatch:
 
 jobs:
   build:
