@@ -2,7 +2,7 @@ import csv
 import requests
 import os
 import pandas as pd
-ENCODED_SECRET = os.environ["ENCODED_SECRET"]
+ENCODED_SECRET = "OTg5OGFmOGUtNzlhNC00MTc1LTk5NjMtNGFmMzI3NDA3MTUyOnZtcXRPOFc1UXp6VnRJR0Q2amFHOFFnNHU3ajU5cUxKYTZOblljdW8=" #os.environ["ENCODED_SECRET"]
 GUILD_ID = 103532
 NAME = "Minty Evergreen"
 REMOTEID = 1003428
@@ -108,7 +108,8 @@ if __name__ == "__main__":
 
     # Record the new logs
     with open('toplogs.csv', mode='a', newline='') as toplogs_file:
-        toplogs_file.write("\n".join(logListDifference)+"\n")
+        if len(logListDifference) > 0:
+            toplogs_file.write("\n".join(logListDifference)+"\n")
 
     with open('output.csv', mode='a', newline='') as output_file:
         output_writer = csv.writer(output_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -173,7 +174,8 @@ if __name__ == "__main__":
                     print(finalList)
                     output_writer.writerow(finalList)
     # Use pandas to sort and clean data, then reexport the csv.
+    print("wow")
     df = pd.read_csv("output.csv")
-    df.sort_values(by="LogStartTime")
+    df.sort_values(by="LogStartTime", inplace=True)
     df.drop_duplicates(inplace=True)
     df.to_csv("output.csv", encoding='utf-8', index=False)
