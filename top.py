@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     # Record the new logs
     with open('toplogs.csv', mode='a', newline='') as toplogs_file:
-        toplogs_file.writelines("\n".join(logListDifference))
+        toplogs_file.write("\n".join(logListDifference)+"\n")
 
     with open('output.csv', mode='a', newline='') as output_file:
         output_writer = csv.writer(output_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
