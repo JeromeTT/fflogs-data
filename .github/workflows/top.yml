@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
           
       - name: execute py script # run main.py
-        run: python main.py
+        run: python top.py
           
       - name: commit files
         run: |
