@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <body>
-  <style>
-    body {
-      background-color: darkgreen;
-    }
-  </style>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="index.css" />
   <!-- Create a div where the graph will take place -->
-  <h1 style="color: white">Updates every 8 hours, starting 2:00 AM AEST??</h1>
+  <h1>Updates every 8 hours, starting 2:00 AM AEST??</h1>
+  <h4 id="trackedPulls">Total tracked pulls:</h4>
   <img src="https://cdn.7tv.app/emote/62348f3b73f35ccbda40810c/4x.webp" />
   <div style="background-color: white; width: 1000px">
     <canvas id="scatter"></canvas>
@@ -85,6 +87,8 @@
       }
 
       document.getElementById("scatter").onclick = clickHandler;
+      document.getElementById("trackedPulls").innerHTML =
+        "Total tracked pulls: " + data.length;
     });
   </script>
 </body>
