@@ -18,7 +18,9 @@
 
   <script>
     //Read the data
-    d3.csv("/output.csv").then(function (data) {
+    d3.csv(
+      "https://raw.githubusercontent.com/JeromeTT/fflogs-data/main/output.csv"
+    ).then(function (data) {
       console.log(data);
       data = data.map((row, index) => ({ ...row, Index: index }));
       console.log(data);
