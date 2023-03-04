@@ -2,7 +2,7 @@ import csv
 import requests
 import os
 import pandas as pd
-ENCODED_SECRET = "OTg5OGFmOGUtNzlhNC00MTc1LTk5NjMtNGFmMzI3NDA3MTUyOnZtcXRPOFc1UXp6VnRJR0Q2amFHOFFnNHU3ajU5cUxKYTZOblljdW8=" #os.environ["ENCODED_SECRET"]
+ENCODED_SECRET = os.environ["ENCODED_SECRET"]
 GUILD_ID = 103532
 NAME = "Minty Evergreen"
 REMOTEID = 1003428
