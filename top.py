@@ -170,12 +170,14 @@ if __name__ == "__main__":
                         defamation = "N"
                     assert defamation != ""
 
-                    finalList = [newDate,pullNumber,pullDuration,bossPercentage,fightPercentage,lastPhase,lastPhaseIntermission,glitch,defamation]
+                    finalList = [0,newDate,id,pullNumber,pullDuration,bossPercentage,fightPercentage,lastPhase,lastPhaseIntermission,glitch,defamation]
                     print(finalList)
                     output_writer.writerow(finalList)
     # Use pandas to sort and clean data, then reexport the csv.
     print("wow")
-    df = pd.read_csv("output.csv")
+    df = pd.read_csv("output.csv", index_col=0)
+    print(df.head())
     df.sort_values(by="LogStartTime", inplace=True)
     df.drop_duplicates(inplace=True)
-    df.to_csv("output.csv", encoding='utf-8', index=False)
+    df.reset_index(drop=True, inplace=True)
+    df.to_csv("output.csv", encoding='utf-8', index=True)

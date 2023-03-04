@@ -1,1 +1,88 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<body>
+  <style>
+    body {
+      background-color: darkgreen;
+    }
+  </style>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Create a div where the graph will take place -->
+  <h1 style="color: white">Updates every 8 hours, starting 2:00 AM AEST??</h1>
+  <img src="https://cdn.7tv.app/emote/62348f3b73f35ccbda40810c/4x.webp" />
+  <div style="background-color: white; width: 1000px">
+    <canvas id="scatter"></canvas>
+  </div>
+
+  <script>
+    //Read the data
+    d3.csv("/output.csv").then(function (data) {
+      console.log(data);
+      data = data.map((row, index) => ({ ...row, Index: index }));
+      console.log(data);
+      b = data.reduce((a, row) => {
+        DefaType = row.P3Defamation;
+        a[DefaType] != undefined ? a[DefaType]++ : (a[DefaType] = 0);
+        return a;
+      }, {});
+
+      delete b["N"];
+
+      phaseDataset = [1, 2, 3, 4, 5, 6].map((p) => ({
+        label: "P" + p,
+        data: data
+          .filter((row) => row.LastPhase == p)
+          .map((row) => ({
+            x: row.Index,
+            y: row.PullDuration / 1000,
+            ...row,
+          })),
+      }));
+      Chart.defaults.font.size = 20;
+
+      const scatterChart = new Chart(document.getElementById("scatter"), {
+        type: "scatter",
+        options: {
+          scales: {
+            x: {
+              type: "linear",
+              position: "bottom",
+            },
+          },
+        },
+        data: {
+          labels: ["what"],
+          datasets: phaseDataset,
+        },
+      });
+      function clickHandler(click) {
+        const points = scatterChart.getElementsAtEventForMode(
+          click,
+          "nearest",
+          { intersect: true },
+          true
+        );
+        if (points.length) {
+          const firstPoint = points[0];
+          console.log(firstPoint);
+          console.log(firstPoint.datasetIndex);
+          console.log(firstPoint.index);
+          var test =
+            phaseDataset[firstPoint.datasetIndex].data[firstPoint.index];
+          console.log(test);
+          var link =
+            "https://www.fflogs.com/reports/" +
+            test.LogID +
+            "#fight=" +
+            test.PullNumber;
+          window.open(link);
+          console.log(link);
+        }
+      }
+
+      document.getElementById("scatter").onclick = clickHandler;
+    });
+  </script>
+</body>
