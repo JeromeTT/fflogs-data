@@ -164,8 +164,12 @@ if __name__ == "__main__":
                     defamation = ""
                     try:
                         result = P3BlueRot[pullNumber]
+                        print(id, pullNumber)
+                        print(result)
+                        print(P3Defamation[pullNumber])
                         result &= P3Defamation[pullNumber]
                         defamation = "B" if len(result) > 0 else "R" 
+                        print(defamation)
                     except:
                         defamation = "N"
                     assert defamation != ""
@@ -174,10 +178,40 @@ if __name__ == "__main__":
                     print(finalList)
                     output_writer.writerow(finalList)
     # Use pandas to sort and clean data, then reexport the csv.
-    print("wow")
     df = pd.read_csv("output.csv", index_col=0)
-    print(df.head())
     df.sort_values(by="LogStartTime", inplace=True)
-    df.drop_duplicates(inplace=True)
+    df.drop_duplicates(subset=['LogStartTime'], inplace=True)
     df.reset_index(drop=True, inplace=True)
     df.to_csv("output.csv", encoding='utf-8', index=True)
+    
+    # Generate new best
+    newBestdf = df.copy(deep=True)
+    i = 0
+    while (len(newBestdf) > i):
+        percent = newBestdf.loc[i, 'FightPercentage']
+        newBestdf = newBestdf[(newBestdf.index <= i) | (newBestdf['FightPercentage'] < percent)]
+        newBestdf.reset_index(drop=True, inplace=True)
+        i += 1
+    newBestdf.sort_values(by="FightPercentage", inplace=True)
+    newBestdf.reset_index(drop=True, inplace=True)
+    newBestdf.to_csv("topPersonalBest.csv", encoding='utf-8', index=True)
+
+    #Generate top defamation
+    defamationdf = df.copy(deep=True)
+
+    blueDefa = 0
+    redDefa = 0
+    winner = ""
+    i = 0
+    while(len(defamationdf) > i):
+        defaType = defamationdf.loc[i, 'P3Defamation']
+        if defaType == "B":
+            blueDefa += 1
+        elif defaType == "R":
+            redDefa += 1
+        result = "B" if blueDefa > redDefa else "R" if redDefa > blueDefa else winner
+        if result != winner and result != "":
+            print(f"{result} is the new winner, Blue: {blueDefa}, Red: {redDefa}")
+        i += 1
+
+    
