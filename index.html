@@ -21,15 +21,38 @@
 
     <link rel="stylesheet" href="index.css" />
     <!-- Create a div where the graph will take place -->
-    <h1>Updates every 8 hours, starting 2:00 AM AEST??</h1>
-    <h4 id="trackedPulls">Total tracked pulls:</h4>
 
-    <img src="https://cdn.7tv.app/emote/62348f3b73f35ccbda40810c/4x.webp" />
-    <div class="container-fluid">
-      <div class="container-xxl" style="background-color: white">
+    <div class="container-fluid" style="color: black">
+      <div class="container-xxl py-4" style="background-color: white">
         <div class="row">
-          <div class="col-sm-12 col-md-12, col-lg-8">"<canvas id="scatter"></canvas></div>
-          <div class="col-sm-12 col-md-6, col-lg-4">
+          <div class="col-1">
+            <img
+              alt="Blue Awk"
+              class="mx-auto d-block"
+              src="https://cdn.discordapp.com/attachments/1067389770436714547/1080497236456247296/awkblue.webp"
+            />
+          </div>
+          <div class="col-10">
+            <div class="col-12 mx-auto" style="text-align: center">
+              <h1 id="winningDefamation">Blue defamation is currently ahead at XX Pulls</h1>
+            </div>
+            <div class="col-12 mx-auto" style="text-align: center"><h4 id="losingDefamation">Red defamation is behind at XX Pulls</h4></div>
+            <div class="col-12 mx-auto" style="text-align: center"><h4 id="trackedPulls"></h4></div>
+          </div>
+          <div class="col-1" style="text-align: right">
+            <img
+              alt="Red Awk"
+              class="mx-auto d-block"
+              style="float: right"
+              src="https://cdn.discordapp.com/attachments/1067389770436714547/1073487324618444891/REDISDEFAMATION.webp"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-8">
+            <canvas class="my-1" id="scatter"></canvas>
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-4">
             <p>
               <a
                 class="btn btn-primary btn-lg btn-block"
@@ -44,11 +67,35 @@
             </p>
             <div class="collapse show" id="collapseExample">
               <div class="card card-body">
-                <div style="color: black; overflow-y: scroll; height: 400px" id="newBests"></div>
+                <div style="color: black; overflow-y: scroll; height: 330px" id="newBests"></div>
               </div>
             </div>
           </div>
         </div>
+        <row
+          ><div class="col-12 mx-auto" style="text-align: center; text-decoration: none">
+            <h5>
+              Auto-updates <a href="https://github.com/JeromeTT/fflogs-data/commits/main" target="_blank">every 8 hours</a>, or when Minty updates
+              manually.
+            </h5>
+            <p>Public logs are from the guild page automatically. (Only logs which are public, not private or unlisted)</p>
+            <a style="text-decoration: none" href="https://github.com/JeromeTT/fflogs-data/actions/workflows/top.yml" target="_blank">
+              <img
+                alt="GitHub last commit"
+                src="https://img.shields.io/github/last-commit/JeromeTT/fflogs-data?label=Last%20Updated&style=?style=flat-square"
+              />
+            </a>
+            <a style="text-decoration: none" href="https://github.com/JeromeTT/fflogs-data" target="_blank">
+              <img alt="GitHub link" src="https://img.shields.io/badge/Github-black?style=flat-square&logo=github&logoColor=white" />
+            </a>
+            <a style="text-decoration: none" href="https://www.fflogs.com/guild/id/103532" target="_blank">
+              <img
+                alt="FFLogs Guild Link"
+                src="https://img.shields.io/badge/Minty's_Fishing_Static-blue?style=flat-square&logo=data:image/png;base64,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&logoColor=white"
+            /></a>
+          </div>
+          <div></div
+        ></row>
       </div>
     </div>
 
@@ -63,9 +110,18 @@
           a[DefaType] != undefined ? a[DefaType]++ : (a[DefaType] = 0);
           return a;
         }, {});
+        console.log(b);
 
-        delete b["N"];
-
+        winningDefamation = document.getElementById("winningDefamation");
+        losingDefamation = document.getElementById("losingDefamation");
+        if (b["R"] > b["B"]) {
+          winningDefamation.innerHTML = "Red defamation is currently ahead at " + b["R"] + " pulls!";
+          losingDefamation.innerHTML = "Blue defamation is behind at " + b["B"] + " pulls!";
+        } else if (b["R"] < b["B"]) {
+          winningDefamation.innerHTML = "Blue defamation is currently ahead at " + b["B"] + " pulls!";
+          losingDefamation.innerHTML = "Red defamation is behind at  " + b["R"] + " pulls";
+        } else {
+        }
         phaseDataset = [1, 2, 3, 4, 5, 6].map((p) => ({
           label: "P" + p,
           data: data
@@ -108,6 +164,7 @@
           }
         }
 
+        data.reduce;
         document.getElementById("scatter").onclick = clickHandler;
         document.getElementById("trackedPulls").innerHTML = "Total tracked pulls: " + data.length;
       });
@@ -119,7 +176,7 @@
           newBests.insertAdjacentElement("beforeend", a);
           var date = new Date(row.LogStartTime * 1);
           var b = document.createElement("a");
-          b.innerHTML = "log";
+          b.innerHTML = "Log";
           b.href = "https://www.fflogs.com/reports/" + row.LogID + "#fight=" + row.PullNumber;
           b.target = "_blank";
           a.innerHTML =
