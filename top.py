@@ -103,7 +103,7 @@ if __name__ == "__main__":
         logListLocal = [line.strip() for line in toplogs_read.readlines()]
 
     # We want to find all the logs online, which we do not have locally
-    logListDifference = list(set(logList).symmetric_difference(set(logListLocal)))
+    logListDifference = list(set(logList).difference(set(logListLocal)))
     print("Total : ", logListDifference)
 
     # Record the new logs
