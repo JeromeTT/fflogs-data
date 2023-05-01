@@ -174,6 +174,8 @@ if __name__ == "__main__":
                         defamation = "N"
                     assert defamation != ""
 
+                    if fightPercentage == 0:
+                        lastPhase = 100
                     finalList = [0,newDate,id,pullNumber,pullDuration,bossPercentage,fightPercentage,lastPhase,lastPhaseIntermission,glitch,defamation]
                     print(finalList)
                     output_writer.writerow(finalList)

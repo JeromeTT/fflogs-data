@@ -1,3 +1,7 @@
 tokens
 .vscode
 .prettierrc
+__pycache__/
+replay/
+python/
+
