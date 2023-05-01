@@ -4,9 +4,9 @@
   <head>
     <title>The Omega Protocol (Ultimate)</title>
     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
-      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
     <link rel="icon" href="https://cdn.discordapp.com/attachments/990304517180493844/1087632564392566824/dnc2-ico.png" />
@@ -14,12 +14,6 @@
   <body>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
 
     <link rel="stylesheet" href="index.css" />
     <!-- Create a div where the graph will take place -->
@@ -54,22 +48,39 @@
           <div class="col-sm-12 col-md-12 col-lg-8">
             <canvas class="my-1" id="scatter"></canvas>
           </div>
-          <div class="col-sm-12 col-md-12 col-lg-4">
-            <p>
-              <a
-                class="btn btn-primary btn-lg btn-block"
+          <div class="col-sm-12 col-md-12 col-lg-4 accordion" id="accordion" style="height: 330px">
+            <div class="accordion-item">
+              <button
+                class="accordion-button py-2"
                 data-bs-toggle="collapse"
-                href="#collapseExample"
+                data-bs-target="#accordionTab1"
+                type="button"
+                aria-expanded="true"
+                aria-controls="accordionTab1"
+              >
+                <h4>Historical Best Pulls</h4>
+              </button>
+              <div class="collapse show accordion-collapse" id="accordionTab1" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                  <div style="overflow-y: scroll; height: 270px" id="newBests"></div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button
+                class="accordion-button collapsed py-2"
+                data-bs-toggle="collapse"
+                data-bs-target="#accordionTab2"
                 role="button"
                 aria-expanded="false"
-                aria-controls="collapseExample"
+                aria-controls="accordionTab2"
               >
-                History of Best Pulls
-              </a>
-            </p>
-            <div class="collapse show" id="collapseExample">
-              <div class="card card-body">
-                <div style="color: black; overflow-y: scroll; height: 330px" id="newBests"></div>
+                <h4>Pull Counts</h4>
+              </button>
+              <div class="collapse accordion-collapse" id="accordionTab2" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                  <div style="color: black; overflow-y: scroll; height: 270px" id="pullCounts"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -104,28 +115,69 @@
     <script>
       //Read the data
       d3.csv("https://raw.githubusercontent.com/JeromeTT/fflogs-data/main/output.csv").then(function (data) {
-        console.log(data);
+        // Add index column
         data = data.map((row, index) => ({ ...row, Index: index }));
-        console.log(data);
-        b = data.reduce((a, row) => {
-          DefaType = row.P3Defamation;
-          a[DefaType] != undefined ? a[DefaType]++ : (a[DefaType] = 0);
+
+        phaseCount = data.reduce((a, row) => {
+          PhaseType = row.LastPhase;
+          a[PhaseType] != undefined ? a[PhaseType]++ : (a[PhaseType] = 1);
           return a;
         }, {});
-        console.log(b);
+        console.log(phaseCount);
+
+        totalPullDuration = data.reduce((a, row) => {
+          PullDuration = row.PullDuration / 1000;
+          a += PullDuration;
+          return a;
+        }, 0);
+        console.log(totalPullDuration);
+
+        pullCounts = document.getElementById("pullCounts");
+
+        [
+          [1, "Omega"],
+          [2, "Omega M/F"],
+          [3, "Omega Reconfigured"],
+          [4, "Blue Screen"],
+          [5, "Run: Dynamis"],
+          [6, "Alpha Omega"],
+          [100, "Cleared"],
+        ].map((c) => {
+          var a = document.createElement("p");
+          pullCounts.insertAdjacentElement("beforeend", a);
+          a.innerHTML = "Phase " + c[0] + ": " + c[1] + ": " + phaseCount[c[0].toString()] + " pulls";
+          if (c[0] == 100) {
+            a.innerHTML = "Cleared: " + phaseCount[c[0].toString()] + " pulls";
+          }
+        });
+        minutes = Math.floor(totalPullDuration / 60) % 60;
+        hours = Math.floor(totalPullDuration / (60 * 60)) % 24;
+        days = Math.floor(totalPullDuration / (60 * 60 * 60));
+        var a = document.createElement("p");
+        pullCounts.insertAdjacentElement("beforeend", a);
+        a.innerHTML = "Total time spent: " + days + " day " + hours + " hours " + minutes + " minutes";
+
+        // Count defas, and display
+        defaCount = data.reduce((a, row) => {
+          DefaType = row.P3Defamation;
+          a[DefaType] != undefined ? a[DefaType]++ : (a[DefaType] = 1);
+          return a;
+        }, {});
+        console.log(defaCount);
 
         winningDefamation = document.getElementById("winningDefamation");
         losingDefamation = document.getElementById("losingDefamation");
-        if (b["R"] > b["B"]) {
-          winningDefamation.innerHTML = "Red defamation is currently ahead at " + b["R"] + " pulls!";
-          losingDefamation.innerHTML = "Blue defamation is behind at " + b["B"] + " pulls!";
-        } else if (b["R"] < b["B"]) {
-          winningDefamation.innerHTML = "Blue defamation is currently ahead at " + b["B"] + " pulls!";
-          losingDefamation.innerHTML = "Red defamation is behind at  " + b["R"] + " pulls";
-        } else {
+        if (defaCount["R"] > defaCount["B"]) {
+          winningDefamation.innerHTML = "Red defamation is currently ahead at " + defaCount["R"] + " pulls!";
+          losingDefamation.innerHTML = "Blue defamation is behind at " + defaCount["B"] + " pulls!";
+        } else if (defaCount["R"] < defaCount["B"]) {
+          winningDefamation.innerHTML = "Blue defamation is currently ahead at " + defaCount["B"] + " pulls!";
+          losingDefamation.innerHTML = "Red defamation is behind at  " + defaCount["R"] + " pulls";
         }
-        phaseDataset = [1, 2, 3, 4, 5, 6].map((p) => ({
-          label: "P" + p,
+
+        // Get datapoints labeled by phases.
+        phaseDataset = [1, 2, 3, 4, 5, 6, 100].map((p) => ({
+          label: p != 100 ? "P" + p : "CLEAR",
           data: data
             .filter((row) => row.LastPhase == p)
             .map((row) => ({
@@ -147,7 +199,6 @@
             },
           },
           data: {
-            labels: ["what"],
             datasets: phaseDataset,
           },
         });
@@ -171,6 +222,7 @@
         document.getElementById("trackedPulls").innerHTML = "Total tracked pulls: " + data.length;
       });
 
+      // Assign Personal Bests
       d3.csv("https://raw.githubusercontent.com/JeromeTT/fflogs-data/main/topPersonalBest.csv").then(function (data) {
         newBests = document.getElementById("newBests");
         data.map((row) => {
@@ -190,24 +242,21 @@
                 year: "numeric",
               })
               .split(" ")
-              .join("-") +
-            " - Phase: " +
-            row.LastPhase +
-            " " +
-            row.BossPercentage +
-            "% ";
+              .join("-");
+
+          if (row.LastPhase != 100) {
+            a.innerHTML += " - Phase: " + row.LastPhase + " " + row.BossPercentage + "% ";
+          } else {
+            a.innerHTML += " - Cleared";
+          }
           a.insertBefore(b, a.firstChild);
         });
       });
     </script>
+
     <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
-      integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
   </body>
