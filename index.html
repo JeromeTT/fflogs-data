@@ -152,7 +152,7 @@
         });
         minutes = Math.floor(totalPullDuration / 60) % 60;
         hours = Math.floor(totalPullDuration / (60 * 60)) % 24;
-        days = Math.floor(totalPullDuration / (60 * 60 * 60));
+        days = Math.floor(totalPullDuration / (60 * 60 * 24));
         var a = document.createElement("p");
         pullCounts.insertAdjacentElement("beforeend", a);
         a.innerHTML = "Total time spent: " + days + " day " + hours + " hours " + minutes + " minutes";
